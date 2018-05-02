@@ -351,15 +351,14 @@ class Cart
         $content = $this->getContent();
 
         $cart = [
-            'identifier' => $identifier,
             'instance' => $this->currentInstance(),
             'content' => serialize($content)
         ];
 
         if ($this->storedCartWithIdentifierExists($identifier)) {
-            // throw new CartAlreadyStoredException("A cart with identifier {$identifier} was already stored.");
-            $this->getConnection()->table($this->getTableName())->update($cart);
+            $this->getConnection()->table($this->getTableName())->where('identifier', $identifier)->update($cart);
         }else{
+            $cart['identifier'] = $identifier;
             $this->getConnection()->table($this->getTableName())->insert($cart);
         }
 
